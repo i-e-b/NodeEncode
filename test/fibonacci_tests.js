@@ -24,7 +24,6 @@ describe("Using the fibonacci encoder", function() {
         });
 
         it("should resynchronise stream if input is damaged");
-        /*
-         * Something like `fib.encode([...long string...])[0] |= 0xF000` -- the end of the `decode` output should be OK
+        /* Something like `fib.encode([...long string...])[0] |= 0xF000` -- the end of the `decode` output should be OK */
     });
 });

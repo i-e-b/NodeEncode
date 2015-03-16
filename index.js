@@ -14,9 +14,9 @@ function fibonacci (n) {
 var fibonacciEncodings = {};
 function fibEncodeNum(n) {
     if (n < 1) return null;
-    //if (fibonacciEncodings[n]) return fibonacciEncodings[n]; // comment in for memoizing
+    if (fibonacciEncodings[n]) return fibonacciEncodings[n]; // comment in for memoizing
 
-    var res = "1"; // strings for initial tests
+    var res = [1]; // strings for initial tests
 
     // find the smallest fibonacci number greater than `n`
     var f = 1, k = 1;
@@ -26,14 +26,45 @@ function fibEncodeNum(n) {
     while(--k > 1) {
         f = fibonacci(k);
         if (f <= n) {
-            res = "1"+res;
+            res.unshift(1);
             n -= f;
         } else {
-            res = "0"+res;
+            res.unshift(0);
         }
     }
     return res;
 }
+
+function bitsToBuf(arr) { // return a buffer given a array of `0` and `1`. TODO: optimise this crap!
+    var len = Math.ceil(arr.length / 8);
+    var outp = new Buffer(len);
+    var i = 0;
+    while(arr.length >= 8) { // bytes at a time
+        console.log("byte");
+        outp[i] =   (arr.shift() << 7) +
+                    (arr.shift() << 6) +
+                    (arr.shift() << 5) +
+                    (arr.shift() << 4) +
+                    (arr.shift() << 3) +
+                    (arr.shift() << 2) +
+                    (arr.shift() << 1) +
+                    (arr.shift());
+        i++;
+    }
+    if (arr.length > 0) {
+        outp[i] = 0;
+        var j = 7;
+        while(arr.length > 0) { // last few bits
+            console.log("bit");
+            outp[i] += arr.shift() << j;
+            j--;
+        }
+    }
+    console.log("done");
+    return outp;
+}
+
+console.dir(bitsToBuf(fibEncodeNum(800)));
 
 
 //-------------------- EXPORTS ------------------------------//  
