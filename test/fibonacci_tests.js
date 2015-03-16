@@ -17,5 +17,14 @@ describe("Using the fibonacci encoder", function() {
             expect(output).to.be.an.instanceof(Buffer);
 
         });
+
+        it("should give `null` for negative inputs", function(){
+            var output = fib.encode([0, -1, 0]);
+            expect(output).to.be.null;
+        });
+
+        it("should resynchronise stream if input is damaged");
+        /*
+         * Something like `fib.encode([...long string...])[0] |= 0xF000` -- the end of the `decode` output should be OK
     });
 });
