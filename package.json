@@ -1,0 +1,39 @@
+{
+  "name": "NodeEncode",
+  "version": "0.0.1",
+  "description": "Universal coding in js",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/i-e-b/NodeEncode.git"
+  },
+  "keywords": [
+    "universal",
+    "signal",
+    "number",
+    "code",
+    "transmit",
+    "synchronize"
+  ],
+  "author": "i-e-b",
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/i-e-b/NodeEncode/blob/master/LICENSE"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/i-e-b/NodeEncode/issues"
+  },
+  "homepage": "https://github.com/i-e-b/NodeEncode",
+  "devDependencies": {
+    "chai": "^2.1.2",
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.8",
+    "mocha": "^2.2.1",
+    "mocha-lcov-reporter": "0.0.2"
+  }
+}
