@@ -12,9 +12,9 @@ function fibonacci (n) {
 }
 
 var fibonacciEncodings = {};
-// take a single number and return an array encoding of the fibonacci code. Returns null on error
+// take a single number and return an array encoding of the fibonacci code. Returns empty array on error
 function fibEncodeNum(n) {
-    if (n < 1) return null;
+    if (n < 1) return [];
     if (fibonacciEncodings[n]) return fibonacciEncodings[n]; // comment in for memoizing
 
     var res = [1];
@@ -109,7 +109,7 @@ function fibDecodeBuffer(buf) {
     return outp;
 }
 
-console.log(JSON.stringify(fibDecodeBuffer(fibEncodeArray([1,2,3,4,3,2,1]))));
+console.log(JSON.stringify(fibEncodeArray([0])));
 /*
 var original = 1547;
 var e = fibEncodeNum(original);
