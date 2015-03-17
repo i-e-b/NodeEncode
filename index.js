@@ -12,11 +12,12 @@ function fibonacci (n) {
 }
 
 var fibonacciEncodings = {};
+// take a single number and return an array encoding of the fibonacci code. Returns null on error
 function fibEncodeNum(n) {
     if (n < 1) return null;
     if (fibonacciEncodings[n]) return fibonacciEncodings[n]; // comment in for memoizing
 
-    var res = [1]; // strings for initial tests
+    var res = [1];
 
     // find the smallest fibonacci number greater than `n`
     var f = 1, k = 1;
@@ -35,12 +36,23 @@ function fibEncodeNum(n) {
     return res;
 }
 
+// take an array encoding of a fibonacci code and return a single number. Final `1` must have been removed. Returns null on error
+function fibDecodeNum(arr) {
+    if (arr.length < 1 || arr.slice(-1)[0] != 1) return null; //badly encoded
+    /*var n = 0, l = arr.length;
+    for (var k = 1; k <= l; k++) {
+        if (arr[l-k]) n += fibonacci(k);
+    }*/
+    return arr.reduce(function(prev, curr, idx) {
+        return prev + (curr * fibonacci(idx+2));
+    }, 0);
+}
+
 function bitsToBuf(arr) { // return a buffer given a array of `0` and `1`. TODO: optimise this crap!
     var len = Math.ceil(arr.length / 8);
     var outp = new Buffer(len);
     var i = 0;
     while(arr.length >= 8) { // bytes at a time
-        console.log("byte");
         outp[i] =   (arr.shift() << 7) +
                     (arr.shift() << 6) +
                     (arr.shift() << 5) +
@@ -55,16 +67,38 @@ function bitsToBuf(arr) { // return a buffer given a array of `0` and `1`. TODO:
         outp[i] = 0;
         var j = 7;
         while(arr.length > 0) { // last few bits
-            console.log("bit");
-            outp[i] += arr.shift() << j;
-            j--;
+            outp[i] += arr.shift() << j--;
         }
     }
-    console.log("done");
     return outp;
 }
 
-console.dir(bitsToBuf(fibEncodeNum(800)));
+// convert a buffer to an array of `0` and `1`
+function bufToBits(buf) {
+    var outp = [];
+    for (var n = 0; n < buf.length; n++) {
+        outp.push((buf[n] & (1<<7)) >> 7);
+        outp.push((buf[n] & (1<<6)) >> 6);
+        outp.push((buf[n] & (1<<5)) >> 5);
+        outp.push((buf[n] & (1<<4)) >> 4);
+        outp.push((buf[n] & (1<<3)) >> 3);
+        outp.push((buf[n] & (1<<2)) >> 2);
+        outp.push((buf[n] & (1<<1)) >> 1);
+        outp.push((buf[n] & (1   ))     );
+    }
+    return outp;
+}
+
+var original = 1547;
+var e = fibEncodeNum(original);
+console.log(original + " --> " + e.length + " bits to encode");
+console.log(JSON.stringify(e));
+var b = bitsToBuf(e);
+console.log(JSON.stringify(b));
+var x = bufToBits(b).slice(0, e.length-1);
+console.log(JSON.stringify(x));
+var de = fibDecodeNum(x);
+console.log(JSON.stringify(de));
 
 
 //-------------------- EXPORTS ------------------------------//  
