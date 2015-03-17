@@ -39,10 +39,6 @@ function fibEncodeNum(n) {
 // take an array encoding of a fibonacci code and return a single number. Final `1` must have been removed. Returns null on error
 function fibDecodeNum(arr) {
     if (arr.length < 1 || arr.slice(-1)[0] != 1) return null; //badly encoded
-    /*var n = 0, l = arr.length;
-    for (var k = 1; k <= l; k++) {
-        if (arr[l-k]) n += fibonacci(k);
-    }*/
     return arr.reduce(function(prev, curr, idx) {
         return prev + (curr * fibonacci(idx+2));
     }, 0);
@@ -89,6 +85,32 @@ function bufToBits(buf) {
     return outp;
 }
 
+// array of num into buffer
+function fibEncodeArray(arr) {
+    return bitsToBuf(Array.prototype.concat.apply([], arr.map(fibEncodeNum)));
+}
+
+// buffer into array of num
+function fibDecodeBuffer(buf) {
+    var arr = bufToBits(buf);
+    if (arr.length < 1) return [];
+    var outp = [];
+    // scan through looking for [1,1]. Decode left and repeat. last bits may not have the [1,1] marker and should be ignored
+    var left = 0, right = 0, len = arr.length, prev = 0;
+    while (right < len) {
+        if (arr[right] > 0 && prev > 0) { // got a match
+            outp.push(fibDecodeNum(arr.slice(left, right)));
+            left = right + 1;
+            right++;
+        }
+        prev = arr[right];
+        right++;
+    }
+    return outp;
+}
+
+console.log(JSON.stringify(fibDecodeBuffer(fibEncodeArray([1,2,3,4,3,2,1]))));
+/*
 var original = 1547;
 var e = fibEncodeNum(original);
 console.log(original + " --> " + e.length + " bits to encode");
@@ -99,14 +121,17 @@ var x = bufToBits(b).slice(0, e.length-1);
 console.log(JSON.stringify(x));
 var de = fibDecodeNum(x);
 console.log(JSON.stringify(de));
+*/
 
 
 //-------------------- EXPORTS ------------------------------//  
 (function (provides) {
 
     provides.fibonacci = {
-        encode: function(i){return i;},
-        decode: function(i){return i;}
+        /** Encode an array of numbers into a buffer */
+        encode: fibEncodeArray,
+        /** Decode a buffer into an array of numbers */
+        decode: fibDecodeBuffer
     }
 
 /* istanbul ignore next */ // `this` branch doesn't get followed
