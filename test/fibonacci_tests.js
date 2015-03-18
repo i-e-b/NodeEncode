@@ -22,6 +22,16 @@ describe("Using the fibonacci encoder", function() {
             expect(output).to.deep.equal([1]);
         });
 
+        it("should cope with large arrays of small numbers", function(){
+            var input = [];
+            var count = 10000; // 100'000 causes problems. Need to improve the encode/decode logic to remove array push/pop
+            for (var i = 0; i < count; i++) { input.push((Math.random() * 15)|0 + 1);}
+            var buf = fib.encode(input);
+            console.log("Length = "+buf.length+ " bytes ("+((buf.length*8) / count)+" bits per digit)");
+            var output = fib.decode(buf);
+            expect(output).to.deep.equal(input);
+        });
+
         it("should resynchronise stream if input is damaged", function(){
             var input = [100,200,300,200,100];
             var buf = fib.encode(input);

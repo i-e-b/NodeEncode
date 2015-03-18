@@ -1,8 +1,7 @@
 "use strict";
 var global, exports;
 
-
-//-------------------- FIBONNACI ------------------------------//
+//-------------------- FIBONACCI ------------------------------//
 var fibonacciSeq = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418];
 function fibonacci (n) {
     if (fibonacciSeq.length > n) { return fibonacciSeq[n]; } 
@@ -108,21 +107,6 @@ function fibDecodeBuffer(buf) {
     }
     return outp;
 }
-
-console.log(JSON.stringify(fibEncodeArray([0])));
-/*
-var original = 1547;
-var e = fibEncodeNum(original);
-console.log(original + " --> " + e.length + " bits to encode");
-console.log(JSON.stringify(e));
-var b = bitsToBuf(e);
-console.log(JSON.stringify(b));
-var x = bufToBits(b).slice(0, e.length-1);
-console.log(JSON.stringify(x));
-var de = fibDecodeNum(x);
-console.log(JSON.stringify(de));
-*/
-
 
 //-------------------- EXPORTS ------------------------------//  
 (function (provides) {
