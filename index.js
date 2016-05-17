@@ -4,7 +4,8 @@ var global, exports;
 //-------------------- FIBONACCI ------------------------------//
 var fibonacciSeq = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418];
 function fibonacci (n) {
-    if (fibonacciSeq.length > n) { return fibonacciSeq[n]; } 
+    if (n > 78) throw new Error("Result will exceed accurate integer range");
+    if (fibonacciSeq.length > n) { return fibonacciSeq[n]; }
     var res = fibonacci(n-2) + fibonacci(n-1);
     fibonacciSeq.push(res);
     return res;
@@ -108,7 +109,7 @@ function fibDecodeBuffer(buf) {
     return outp;
 }
 
-//-------------------- EXPORTS ------------------------------//  
+//-------------------- EXPORTS ------------------------------//
 (function (provides) {
 
     provides.fibonacci = {
