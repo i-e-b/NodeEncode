@@ -48,6 +48,25 @@ function Binpak(){
         return (this.list[b] >> p) & 1;
     };
 
+    this.set = function(idx, value) {
+        var b = (idx / 8)|0, p = idx - (b*8);
+
+        var i;
+        for (i = this.list.length - 1; i < b; i++) {this.list.push(0);}
+        this.block = (this.block > b) ? (this.block) : (b);
+        this.pos = (this.pos > p) ? (this.pos) : (p);
+
+        var block = this.list[b];
+        var mask = 1 << p;
+        if (value > 0) {
+            block |= mask; // set the bit
+        } else {
+            block ^= (block & mask); // zero the bit
+        }
+
+        this.list[b] = block;
+    }
+
     this.extract = function(left, right) {
         var b,p,i,r = [];
         for (i = left; i < right; i++) {

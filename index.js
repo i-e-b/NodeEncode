@@ -1,5 +1,6 @@
 "use strict";
 var global, exports;
+var Bin = require('./bin');
 
 //-------------------- FIBONACCI ------------------------------//
 var fibonacciSeq = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418];
@@ -88,6 +89,11 @@ function bufToBits(buf) {
 // array of num into buffer
 function fibEncodeArray(arr) {
     return bitsToBuf(Array.prototype.concat.apply([], arr.map(fibEncodeNum)));
+    /*var bin = new Bin();
+    for (var i = 0; i < arr.length; i++) {
+        bin.push(fibEncodeNum(arr[i]));
+    }
+    return bin.toBuffer();*/
 }
 
 // buffer into array of num
