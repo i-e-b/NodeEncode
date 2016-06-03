@@ -28,7 +28,13 @@ describe("When pushing and popping bits", function() {
         var r = inp.extract(0,4);
         expect(r).to.deep.equal([1,1,0,1]);
     });
+    it("should push arrays in the correct order", function(){
+        var inp = new bin();
+        inp.push([1,1,0,1]);
 
+        var r = inp.extract(0,4);
+        expect(r).to.deep.equal([1,1,0,1]);
+    });
 });
 
 describe("When reversing a bitwise array", function() {

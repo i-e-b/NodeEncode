@@ -26,14 +26,18 @@ function Binpak(){
     this.list = [0];
 
     this.push = function(b) {
-        if (this.pos > 7) { this.pos = 0; this.block++; this.list.push(0); }
-        this.list[this.block] |= ((b > 0) ? (1) : (0)) << this.pos++;
+        if (! Array.isArray(b)) b = [b];
+
+        for (var i = 0; i < b.length; i++) {
+            if (this.pos > 7) { this.pos = 0; this.block++; this.list.push(0); }
+            this.list[this.block] |= ((b[i] > 0) ? (1) : (0)) << this.pos++;
+        }
     };
 
     this.pop = function() {
         this.pos--;
         if (this.pos < 0) { this.block--; this.list.pop(); this.pos = 7; }
-        if (this.block < 0) throw new Error("Nothing to pop");
+        if (this.block < 0) return undefined;
         var r = (this.list[this.block] >> this.pos) & 1;
         this.list[this.block] ^= r << this.pos;
         return r;
@@ -53,26 +57,15 @@ function Binpak(){
         return r;
     };
 
+    // reverse the order of bits
     this.reverse = function() {
-        var x,n = [];
-        // TODO: this doesn't take account of the length of the data in the list elements -- so a list of 4 bits ends up losing
-        //       data to the far end of the byte. If the last byte is partial in a list, then the first byte becomes partial when reversed.
-        //       so this needs to be much more complex, or have a second 'shift' stage.
-        // handle the first element specially, as it may be a partial byte
-        console.log(JSON.stringify(this.list));
-        x = this.list.pop();
-        if (x !== undefined) {
-            var s = 8 - this.pos;
-            console.log(x.toString(2) + '=>' + (BitReverseTable256[x] >> s).toString(2) + ' == ' + (BitReverseTable256[x] >> s));
-            n.push(BitReverseTable256[x] >> s);
-        }
-
-        while ((x = this.list.pop()) !== undefined) {
-            console.log(x.toString(2) + '=>' + BitReverseTable256[x].toString(2) + ' == ' + BitReverseTable256[x]);
-            n.push(BitReverseTable256[x]);
-        }
-        console.log(JSON.stringify(n));
-        this.list = n;
+        // this is not the most efficient way of doing things...
+        var next = new Binpak();
+        var bit;
+        while( (bit = this.pop()) !== undefined ) {next.push(bit);}
+        this.block = next.block;
+        this.pos = next.pos;
+        this.list = next.list;
     };
 
     this.toBuffer = function(){
